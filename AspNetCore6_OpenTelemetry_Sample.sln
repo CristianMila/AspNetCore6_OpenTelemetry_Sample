@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore6_OpenTelemetry_Sample", "AspNetCore6_OpenTelemetry_Sample\AspNetCore6_OpenTelemetry_Sample.csproj", "{4EF04381-F1F7-4576-8A08-285824EC1EFE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SomeApplicationProject", "SomeApplicationProject\SomeApplicationProject.csproj", "{97D90A37-6755-4EA0-B9C4-17490FA18DB3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4EF04381-F1F7-4576-8A08-285824EC1EFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EF04381-F1F7-4576-8A08-285824EC1EFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EF04381-F1F7-4576-8A08-285824EC1EFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EF04381-F1F7-4576-8A08-285824EC1EFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97D90A37-6755-4EA0-B9C4-17490FA18DB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97D90A37-6755-4EA0-B9C4-17490FA18DB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97D90A37-6755-4EA0-B9C4-17490FA18DB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97D90A37-6755-4EA0-B9C4-17490FA18DB3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6997BC78-3FCC-4B27-A32F-69ACF540AFA7}
+	EndGlobalSection
+EndGlobal
