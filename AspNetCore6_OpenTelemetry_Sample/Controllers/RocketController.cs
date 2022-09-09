@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SomeApplicationProject;
+using System.Diagnostics;
 
 namespace AspNetCore6_OpenTelemetry_Sample.Controllers
 {
@@ -23,6 +24,8 @@ namespace AspNetCore6_OpenTelemetry_Sample.Controllers
 
                 return BadRequest();
             }
+
+            Activity.Current?.AddTag("test", "test");
 
             _logger.LogInformation("we're about to launch");
             var res = _service.LaunchRocketById(rocketId);

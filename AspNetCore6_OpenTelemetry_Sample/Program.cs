@@ -1,4 +1,5 @@
 using OpenTelemetry.Logs;
+using OpenTelemetry.Trace;
 using SomeApplicationProject;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,14 @@ builder.Logging.ClearProviders();
 builder.Logging.AddOpenTelemetry(options =>
 {
     options.AddConsoleExporter();
+});
+builder.Services.AddOpenTelemetryTracing(options =>
+{
+    options.SetSampler(new AlwaysOnSampler())
+           .AddHttpClientInstrumentation()
+           .AddAspNetCoreInstrumentation()
+           .AddConsoleExporter();
+
 });
 
 builder.Services.AddControllers();
