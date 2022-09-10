@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore6_OpenTelemetry_Sample", "AspNetCore6_OpenTelemetry_Sample\AspNetCore6_OpenTelemetry_Sample.csproj", "{4EF04381-F1F7-4576-8A08-285824EC1EFE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SomeApplicationProject", "SomeApplicationProject\SomeApplicationProject.csproj", "{97D90A37-6755-4EA0-B9C4-17490FA18DB3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SomeApplicationProject", "SomeApplicationProject\SomeApplicationProject.csproj", "{97D90A37-6755-4EA0-B9C4-17490FA18DB3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

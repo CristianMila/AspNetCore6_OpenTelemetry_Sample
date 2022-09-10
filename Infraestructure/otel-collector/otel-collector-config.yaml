@@ -1,0 +1,36 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+
+processors:
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 10000
+  batch:
+    send_batch_size: 100
+    timeout: 1000
+
+exporters:
+  file/logs:
+    path: /tmp/logs.json
+  file/traces:
+    path: /tmp/traces.json
+  file/metrics:
+    path: /tmp/metrics.json
+  
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [file/traces]
+    metrics:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [file/metrics]
+    logs:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [file/logs]
