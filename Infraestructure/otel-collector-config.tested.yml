@@ -1,0 +1,42 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+
+processors:
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 10000
+  batch:
+    send_batch_size: 100
+    timeout: 1000
+
+exporters:
+  file/logs:
+    path: /tmp/logs.json
+  file/traces:
+    path: /tmp/traces.json
+  file/metrics:
+    path: /tmp/metrics.json
+  otlp/elastic:
+    endpoint: http://apm_server:8200
+    headers:
+      Authorization: "Bearer UEJOdUtZTUJaUGVfYk5Qbm40NDQ6MHlPX2NhNmxRc0dhSFVQbktSSnBtZw=="
+    tls:
+      insecure: true
+  
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [file/traces, otlp/elastic]
+    metrics:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [file/metrics, otlp/elastic]
+    logs:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [file/logs, otlp/elastic]

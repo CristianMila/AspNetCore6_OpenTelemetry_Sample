@@ -1,0 +1,92 @@
+version: '2.2'
+
+services:
+
+  otel-collector:
+    image: otel/opentelemetry-collector
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./otel-collector/otel-collector-config.yaml:/etc/otel-collector-config.yaml
+      - ./otel-collector/files/metrics.json:/tmp/metrics.json
+      - ./otel-collector/files/logs.json:/tmp/logs.json
+      - ./otel-collector/files/traces.json:/tmp/traces.json
+    ports:
+      - "43170:4317"   # OTLP gRPC receiver
+      - "43180:4318"   # OTLP http receiver
+    networks:
+      - elastic
+
+  es01:
+    container_name: es01
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.4.1
+    environment:
+      - node.name=es01
+      - discovery.type=single-node
+      # - cluster.initial_master_nodes=es01,es02
+      - ELASTIC_PASSWORD=$ELASTIC_PASSWORD 
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      # - xpack.license.self_generated.type=trial 
+      - xpack.security.enabled=true
+    volumes: ['data01:/usr/share/elasticsearch/data', 'certs:$CERTS_DIR']
+    ports:
+      - 9200:9200
+    networks:
+      - elastic
+    healthcheck:
+      test: curl --cacert $CERTS_DIR/ca/ca.crt -s https://localhost:9200 >/dev/null; if [[ $$? == 52 ]]; then echo 0; else echo 1; fi
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  kibana:
+    container_name: kibana
+    image: docker.elastic.co/kibana/kibana:8.4.1
+    ports:
+      - 56010:5601
+    depends_on:
+      - es01
+    environment:
+      - ELASTICSEARCH_URL=http://es01:9200
+#      - ELASTICSEARCH_USERNAME=elastic
+#      - ELASTICSEARCH_PASSWORD=$ELASTIC_PASSWORD
+    networks:
+      - elastic
+
+  apm-server:
+    container_name: apm_server
+    image: docker.elastic.co/apm/apm-server:8.4.1
+    cap_add: ["CHOWN", "DAC_OVERRIDE", "SETGID", "SETUID"]
+    cap_drop: ["ALL"]
+    ports:
+    - 8200:8200
+    command: >
+       apm-server -e
+         -E apm-server.rum.enabled=true
+         -E setup.kibana.host=http://kibana:5601
+         -E setup.kibana.username=elastic
+         -E setup.kibana.password=$ELASTIC_PASSWORD
+         -E setup.template.settings.index.number_of_replicas=0
+         -E apm-server.kibana.enabled=true
+         -E apm-server.kibana.host=http://kibana:5601
+         -E apm-server.kibana.username=elastic
+         -E apm-server.kibana.password=$ELASTIC_PASSWORD
+         -E output.elasticsearch.hosts=["es01:9200"]
+         -E output.elasticsearch.username=elastic
+         -E output.elasticsearch.password=$ELASTIC_PASSWORD
+    healthcheck:
+      interval: 10s
+      retries: 12
+      test: curl --write-out 'HTTP %{http_code}' --fail --silent --output /dev/null http://localhost:8200/
+    networks:
+      - elastic
+
+  wait_until_ready:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.4.1
+    command: /usr/bin/true
+    depends_on: {"es01": {"condition": "service_healthy"}}
+
+volumes: {"data01", "certs"}
+
+networks:
+  elastic:
+    driver: bridge
